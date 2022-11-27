@@ -29,3 +29,10 @@ vintage는 juit 3,4 실행
 - Controller의 API를 테스트하는 용도인 MockMvc 객체를 주입받음
 - perform() 메소드를 활용하여 컨트롤러의 동작을 확인 할 수 있음
 - andExpect(), andDo(), andReturn()등의 메소드를 같이 활용
+
+F.I.R.S.T 원칙
+- Fast: 테스트는 빠르게 진행되어야 함
+- Independent: 독립적인 테스트가 가능해야 함
+- Repeatable: 테스트는 매번 같은 결과를 만들어야 함
+- Self-valdating: 테스트는 그 자체로 실행하여 결과를 확인 할 수 있어야 함
+- Timely: 단위테스트는 비즈니스 코드가 완성되기전에 구성하고 테스트 가능해야함
