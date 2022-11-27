@@ -1,4 +1,17 @@
 spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  datasource:
+    username: webdb
+    url: jdbc:mysql://192.168.31.7:49154/web_db?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true
+    password: p@ssword123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+logging:
+  level:
+    root: info
