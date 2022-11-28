@@ -38,6 +38,6 @@ F.I.R.S.T 원칙
 - Timely: 단위테스트는 비즈니스 코드가 완성되기전에 구성하고 테스트 가능해야함
 
 Jacoco
-테스트 커버리지 리포트 하는 라이브러리
-실무에서는 보통 70~80% 코드 커버리지
-https://insight-bgh.tistory.com/521
+- 테스트 커버리지 리포트 하는 라이브러리
+- 실무에서는 보통 70~80% 코드 커버리지
+- https://insight-bgh.tistory.com/521
