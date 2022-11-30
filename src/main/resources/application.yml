@@ -15,3 +15,8 @@ spring:
 logging:
   level:
     root: info
+
+naver:
+  shortUrl: openapi.naver.com/v1/util/shorturl
+  clientId: DIQ9kSya80pQ27fPvpk_
+  clientSecret: 37dTiG6CHT

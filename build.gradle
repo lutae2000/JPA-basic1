@@ -78,10 +78,10 @@ dependencies {
     implementation group: 'org.apache.maven', name: 'maven-plugin-api', version: '3.8.6'
 // https://mvnrepository.com/artifact/org.apache.maven.reporting/maven-reporting-api
     implementation group: 'org.apache.maven.reporting', name: 'maven-reporting-api', version: '3.1.1'
-
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.31'
-
+    implementation("io.netty:netty-resolver-dns-native-macos:4.1.75.Final:osx-aarch_64")
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
