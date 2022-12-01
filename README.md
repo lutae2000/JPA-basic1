@@ -41,3 +41,6 @@ Jacoco
 - 테스트 커버리지 리포트 하는 라이브러리
 - 실무에서는 보통 70~80% 코드 커버리지
 - https://insight-bgh.tistory.com/521
+
+샘플로 사용한 API 예제
+- Naver develpers 단축 URL
