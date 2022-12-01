@@ -56,6 +56,12 @@ public class NaverShortUrlService {
                     })
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
+                    .onStatus(HttpStatus::is4xxClientError, clientResponse -> clientResponse.bodyToMono(String.class)
+                                                                                            .map(body -> new RuntimeException(body))
+                    )
+                    .onStatus(HttpStatus::is5xxServerError, clientResponse -> clientResponse.bodyToMono(String.class)
+                                                                                            .map(body -> new RuntimeException(body))
+                    )
                     .toEntity(NaverUrlDto.class)
                     .block();
             return response;
