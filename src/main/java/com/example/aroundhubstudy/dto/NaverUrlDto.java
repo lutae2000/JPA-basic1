@@ -1,9 +1,6 @@
 package com.example.aroundhubstudy.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -11,11 +8,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NaverUrlDto {
     private String message;
-    private String result;
     private String code;
-
+    private Result result;
     @Data
-    public static class Result {
+    public class Result {
         private String hash;
         private String url;
         private String orgUrl;

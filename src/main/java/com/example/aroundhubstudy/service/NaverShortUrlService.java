@@ -2,52 +2,63 @@ package com.example.aroundhubstudy.service;
 
 import com.example.aroundhubstudy.dto.NaverUrlDto;
 import com.example.aroundhubstudy.entity.ShortUrl;
+
+import io.netty.handler.codec.http.HttpScheme;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
 
 @Service
 @Slf4j
 public class NaverShortUrlService {
 
-    private WebClient webClient;
-
     @Value("${naver.shortUrl}")
-    private String NAVER_SHORT_URL;
+    private String NAVER_SHORT_URL_ENDPOINT;
 
-    public NaverShortUrlService(WebClient webClient) {
-        this.webClient = webClient;
-    }
+    @Value("${naver.clientId}")
+    private String NAVER_CLIENT_ID;
 
-    public ResponseEntity<NaverUrlDto> requestShortUrl(String clientId, String clientSecret, String originUrl){
-        try{
+    @Value("${naver.clientSecret}")
+    private String NAVER_CLIENT_SECRET;
 
-//            String url = UriComponentsBuilder.fromUriString(NAVER_SHORT_URL)
-//                    .queryParam("url", originUrl)
-//                    .build()
-//                    .toUriString();
+    /* WebClient 사용해서 구현 */
+    public ResponseEntity<NaverUrlDto> requestShortUrlv2(String originUrl){
+        try {
+            //URI 생성 방법1
+            String url = UriComponentsBuilder.fromUriString(NAVER_SHORT_URL_ENDPOINT)
+                    .queryParam("url", originUrl)
+                    .build()
+                    .toUriString();
 
-            String url = "https://openapi.naver.com/v1/util/shorturl?url=http://utlee.duckdns.org";
-            ResponseEntity<NaverUrlDto> response = webClient.get()
-                    .uri(url)
+            //URI 생성 방법 2
+            UriComponents url2 = UriComponentsBuilder.newInstance()
+                    .scheme("https")
+                    .host("openapi.naver.com")
+                    .path("/v1/util/shorturl")
+                    .queryParam("url", originUrl)
+                    .build();
+
+            ResponseEntity<NaverUrlDto> response = WebClient.create(url)
+                    .get()
                     .headers(httpHeaders -> {
-                        httpHeaders.add(HttpHeaders.CONTENT_TYPE, String.valueOf(MediaType.APPLICATION_JSON));
-                        httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
-                        httpHeaders.add("X-Naver-Client-Id", clientId);
-                        httpHeaders.add("X-Naver-Client-Secret", clientSecret);
+                        httpHeaders.add("X-Naver-Client-Id", NAVER_CLIENT_ID);
+                        httpHeaders.add("X-Naver-Client-Secret", NAVER_CLIENT_SECRET);
                     })
+                    .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .toEntity(NaverUrlDto.class)
                     .block();
             return response;
-
         } catch (WebClientResponseException e){
             log.error("response code : {}, response body : {}", e.getStatusCode(), e.getResponseBodyAsString());
             log.error("WebClient Exception", e);
@@ -57,5 +68,30 @@ public class NaverShortUrlService {
         }
     }
 
+    /* RestTemplate 사용해서 구현 */
+    public ResponseEntity<NaverUrlDto> requestShortUrlv1(String originUrl){
+        try{
+            URI url = UriComponentsBuilder.fromUriString(NAVER_SHORT_URL_ENDPOINT)
+                    .queryParam("url", originUrl)
+                    .encode()
+                    .build()
+                    .toUri();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            httpHeaders.set("X-Naver-Client-Id", NAVER_CLIENT_ID);
+            httpHeaders.set("X-Naver-Client-Secret", NAVER_CLIENT_SECRET);
+
+            HttpEntity<String> entity = new HttpEntity<>("", httpHeaders);
+            RestTemplate restTemplate = new RestTemplate();
+
+            ResponseEntity<NaverUrlDto> response = restTemplate.exchange(url, HttpMethod.GET,entity, NaverUrlDto.class);
+
+            return response;
+
+        } catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 }

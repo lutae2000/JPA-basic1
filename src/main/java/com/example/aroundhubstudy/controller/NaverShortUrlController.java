@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 public class NaverShortUrlController {
-    @Value("${naver.client.id}")
-    private String CLIENT_ID;
-
-    @Value("${naver.client.secret}")
-    private String CLIENT_SECRET;
-
     @Autowired
     NaverShortUrlService naverShortUrlService;
 
-    @GetMapping("/shorturl")
-    public ResponseEntity<NaverUrlDto> generateShortUrl(@RequestParam String originUrl){
-        log.info("generateShortUrl from: {}", originUrl);
-        return naverShortUrlService.requestShortUrl(CLIENT_ID, CLIENT_SECRET, originUrl);
+    @GetMapping("/shorturl-v1")
+    public ResponseEntity<NaverUrlDto> generateShortUrlv1(@RequestParam String originUrl){
+        /* RestTemplate 사용해서 구현 */
+        return naverShortUrlService.requestShortUrlv1(originUrl);
+    }
+
+    @GetMapping("/shorturl-v2")
+    public ResponseEntity<NaverUrlDto> generateShortUrlv2(@RequestParam String originUrl){
+        /* WebClient 사용해서 구현 */
+        return naverShortUrlService.requestShortUrlv2(originUrl);
     }
 
 }
