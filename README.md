@@ -43,4 +43,10 @@ Jacoco
 - https://insight-bgh.tistory.com/521
 
 샘플로 사용한 API 예제
-- Naver develpers 단축 URL
+- Naver developers 단축 URL
+
+JPA Auditing
+- @CreatedDate : 엔티티가 저장되는 시점에 자동으로 시간 주입
+- @CreatedBy : 엔티티가 저장되는 시점에 저장 주체가 누구인지 주입
+- @LastModifiedDate : 엔티티가 수정되는 시점에 자동으로 시간 주입
+- @LastModifiedBy : 엔티티가 수정되는 시점에 수정 주체가 누구인지 주입

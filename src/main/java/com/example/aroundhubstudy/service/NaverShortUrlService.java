@@ -131,13 +131,33 @@ public class NaverShortUrlService {
 
     public void deleteShortUrl(String originUrl){
         log.info("[delete short url] request data: {}", originUrl);
+
         shortUrlRepository.deleteByOrgUrl(originUrl);
     }
 
-    public NaverUrlDto getShortUrl(String originUrl){
+
+    public ResponseEntity<?> getShortUrl(String originUrl){
         log.info("[get short url from Naver] request data: {}", originUrl);
-        shortUrlRepository.findByOrgUrl(originUrl);
-        return null;
+        Optional<ShortUrl> getShortUrl1 = Optional.ofNullable(shortUrlRepository.findByOrgUrl(originUrl));
+
+        if(getShortUrl1.isPresent()){
+            log.info("data exists!");
+
+            ShortUrl shortUrl = new ShortUrl();
+            shortUrl.setOrgUrl(getShortUrl1.get().getOrgUrl());
+            shortUrl.setUrl(getShortUrl1.get().getUrl());
+            shortUrl.setHash(getShortUrl1.get().getHash());
+            shortUrl.setCreatedAt(getShortUrl1.get().getCreatedAt());
+            shortUrl.setUpdateAt(getShortUrl1.get().getUpdateAt());
+            shortUrl.setId(getShortUrl1.get().getId());
+
+            return ResponseEntity.status(HttpStatus.OK).body(shortUrl);
+        } else {
+            log.info("data doesn't exists!");
+            ResponseEntity<NaverUrlDto> response = generateShortUrl(originUrl);
+
+            return ResponseEntity.status(HttpStatus.OK).body(response.getBody());
+        }
     }
 
 }

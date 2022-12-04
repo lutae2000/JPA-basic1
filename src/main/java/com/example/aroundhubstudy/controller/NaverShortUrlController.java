@@ -38,4 +38,10 @@ public class NaverShortUrlController {
         return ResponseEntity.status(HttpStatus.OK).body("삭제완료");
     }
 
+    @GetMapping("/naverShortUrl")
+    public ResponseEntity<?> getNaverShortUrl(@RequestParam String originUrl){
+        ResponseEntity<?> response = naverShortUrlService.getShortUrl(originUrl);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }

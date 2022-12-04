@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ShortUrlRepository extends JpaRepository<ShortUrl, String> {
-    void deleteByOrgUrl(String originUrl);
+    ShortUrl deleteByOrgUrl(String originUrl);
 
-    void findByOrgUrl(String originUrl);
+    ShortUrl findByOrgUrl(String originUrl);
 }
