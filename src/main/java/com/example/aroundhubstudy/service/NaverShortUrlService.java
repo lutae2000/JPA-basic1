@@ -3,8 +3,10 @@ package com.example.aroundhubstudy.service;
 import com.example.aroundhubstudy.dto.NaverUrlDto;
 import com.example.aroundhubstudy.entity.ShortUrl;
 
+import com.example.aroundhubstudy.repository.ShortUrlRepository;
 import io.netty.handler.codec.http.HttpScheme;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class NaverShortUrlService {
+
+    @Autowired
+    ShortUrlRepository shortUrlRepository;
 
     @Value("${naver.shortUrl}")
     private String NAVER_SHORT_URL_ENDPOINT;
@@ -98,6 +104,40 @@ public class NaverShortUrlService {
             log.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    /**
+     * 네이버 단축 URL 요청 및 응답 후 DB에 upsert
+     * @param originUrl
+     * @return ResponseEntity<NaverUrlDto>
+     */
+    public ResponseEntity<NaverUrlDto> generateShortUrl(String originUrl){
+        log.info("[generate short url] request data: {}", originUrl);
+
+        ResponseEntity<NaverUrlDto> responseEntity = requestShortUrlv2(originUrl);
+
+        String orgUrl = responseEntity.getBody().getResult().getOrgUrl();
+        String shortUrl = responseEntity.getBody().getResult().getUrl();
+        String hash = responseEntity.getBody().getResult().getHash();
+
+        ShortUrl shortUrlEntity = new ShortUrl();
+        shortUrlEntity.setOrgUrl(orgUrl);
+        shortUrlEntity.setUrl(shortUrl);
+        shortUrlEntity.setHash(hash);
+        shortUrlRepository.save(shortUrlEntity);
+
+        return responseEntity;
+    }
+
+    public void deleteShortUrl(String originUrl){
+        log.info("[delete short url] request data: {}", originUrl);
+        shortUrlRepository.deleteByOrgUrl(originUrl);
+    }
+
+    public NaverUrlDto getShortUrl(String originUrl){
+        log.info("[get short url from Naver] request data: {}", originUrl);
+        shortUrlRepository.findByOrgUrl(originUrl);
+        return null;
     }
 
 }

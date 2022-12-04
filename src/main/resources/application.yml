@@ -4,6 +4,9 @@ spring:
     hibernate:
       ddl-auto: update
     defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -15,6 +18,12 @@ spring:
 logging:
   level:
     root: info
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
 
 naver.shortUrl: https://openapi.naver.com/v1/util/shorturl
 naver.clientId: DIQ9kSya80pQ27fPvpk_
