@@ -50,3 +50,8 @@ JPA Auditing
 - @CreatedBy : 엔티티가 저장되는 시점에 저장 주체가 누구인지 주입
 - @LastModifiedDate : 엔티티가 수정되는 시점에 자동으로 시간 주입
 - @LastModifiedBy : 엔티티가 수정되는 시점에 수정 주체가 누구인지 주입
+
+JPQL(Java Persistence Query Language)
+- 테이블이 아닌 엔티티 객체를 대상으로 사용되는 객체지향 쿼리
+- JPA JPQL을 분석한 후 연동되어있는 데이터베이스에 맞는 SQL로 가공하여 사용
+- 이름을 짓는 특별한 규칙이 존재하며, 이름 규칙에따라 쿼리 자동 생성
