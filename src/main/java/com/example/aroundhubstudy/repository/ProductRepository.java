@@ -32,19 +32,17 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     List<Product> findByProductStockIsNull();
     List<Product> findByProductStockIsNotNull();
 
-    List<Product> findTopByProductIdAndName(String id, String name);
-
-    List<Product> findTopByIdAndName(String id, String name);
+    List<Product> findTopByProductIdAndProductName(String id, String name);
 
     List<Product> findByProductPriceGreaterThan(int price);
 
     List<Product> findByProductNameContaining(String name);
 
-    List<Product> findByProductNameContainingOrderByStockAsc(String name);
+    List<Product> findByProductNameContainingOrderByProductStockAsc(String name);
 
-    List<Product> findByProductNameContainingOrderByStockDesc(String name);
+    List<Product> findByProductNameContainingOrderByProductStockDesc(String name);
 
-    List<Product> findByProductNameContainingOrderByPriceAscStockDesc(String name);
+    List<Product> findByProductNameContainingOrderByProductPriceAscProductStockDesc(String name);
 
     List<Product> findByProductNameContaining(String name, Sort sort);
 }

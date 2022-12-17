@@ -147,7 +147,7 @@ public class ProductRepositoryTest {
         }
         System.out.println("====↑↑ Test Data ↑↑====");
 
-        System.out.println(productRepository.findTopByProductIdAndName("1,", "상품1"));
+        System.out.println(productRepository.findTopByProductIdAndProductName("1,", "상품1"));
     }
 
     @Test
@@ -189,12 +189,12 @@ public class ProductRepositoryTest {
         }
         System.out.println("====↑↑ Test Data ↑↑====");
 
-        List<Product> findEntity = productRepository.findByProductNameContainingOrderByStockAsc("상품1");
+        List<Product> findEntity = productRepository.findByProductNameContainingOrderByProductStockAsc("상품1");
         for (Product product : findEntity){
             System.out.println(product.toString());
         }
 
-        List<Product> findEntity2 = productRepository.findByProductNameContainingOrderByStockDesc("상품2");
+        List<Product> findEntity2 = productRepository.findByProductNameContainingOrderByProductPriceAscProductStockDesc("상품2");
         for(Product product : findEntity2){
             System.out.println(product.toString());
         }
@@ -209,7 +209,7 @@ public class ProductRepositoryTest {
         }
         System.out.println("====↑↑ Test Data ↑↑====");
 
-        List<Product> findEntity = productRepository.findByProductNameContaining("상품1", Sort.by(Sort.Order.asc("price"), Sort.Order.asc("stock")));
+        List<Product> findEntity = productRepository.findByProductNameContaining("상품1", Sort.by(Sort.Order.asc("productPrice"), Sort.Order.asc("productStock")));
         for(Product product : findEntity){
             System.out.println(product.toString());
         }
