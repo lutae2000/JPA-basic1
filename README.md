@@ -71,5 +71,30 @@ Jasypt
 - 네트워크를 통해 데이터를 가져오는 트랜젝션 비용이 있기에 로컬캐시에 비해 상대적으로 느림
 - 별도 서버로 운영되기에 서버간 데이터 공유에 용이함
 
-Redis 서버 띄운다음에 테스트
-- ![img.png](img.png)
+Docker로 Redis 서버 띄운 다음에 테스트![img.png](img.png)
+
+### 스프링 동작 순서 ###
+![img_1.png](img_1.png)
+
+### HandlerInterceptor 구조 ###
+preHandle
+- 컨트롤러로 요청이 가기전에 수행할 코드를 작성하는 메소드
+- return 값이 true인 경우 컨트롤러로 전달하고 False이면 컨트롤러로 전달하지 않음
+- Object handler: 요청을 전달할 컨트롤러 객체가 담겨있음
+
+postHandler
+- 컨트롤러의 로직이 수행된 후 view가 랜더링 되기전 수행할 코드를 작성하는 메소드
+
+afterCompletion
+- view가 랜더링된 후 실행되는 메소드
+
+### HttpServletRequest & HttpServletResponse ###
+WAS가 요청받으면 HttpServletRequest, HttpServletResponse 객체를 생성하여 웹 애플리케이션으로 전달
+HttpServletRequest
+- Http 프로토콜의 Request 정보를 서블릿으로 전달하기 위해 사용되는 객체
+- Header, Parameter, Cookie, URL, URI등 정보를 가짐
+- Body 값을 읽기 위한 메소드를 가짐
+
+HttpServletResponse
+- 요청에대한 응답값을 담기위한 객체
+- Content-Type이나 응답코드, 메시지를 가짐
