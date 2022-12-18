@@ -3,8 +3,12 @@ package com.example.aroundhubstudy.repository;
 import com.example.aroundhubstudy.entity.Product;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -215,5 +219,123 @@ public class ProductRepositoryTest {
         }
     }
 
+    @Test
+    void findByPriceGreaterThan(){
+        List<Product> findAll = productRepository.findAll();
+        System.out.println("====↓↓ Test Data ↓↓====");
+        for (Product product : findAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("====↑↑ Test Data ↑↑====");
 
+        List<Product> findEntity = productRepository.findByProductPriceGreaterThan(200, PageRequest.of(0, 2));
+        for(Product product : findEntity){
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    void queryTest(){
+        List<Product> findAll = productRepository.findAll();
+        System.out.println("====↓↓ Test Data ↓↓====");
+        for (Product product : findAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("====↑↑ Test Data ↑↑====");
+
+        List<Product> findProduct = productRepository.findByProductPriceBasic();
+        for(Product product : findProduct){
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    void nativeQueryTest(){
+        List<Product> findAll = productRepository.findAll();
+        System.out.println("====↓↓ Test Data ↓↓====");
+        for (Product product : findAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("====↑↑ Test Data ↑↑====");
+
+        List<Product> findProduct = productRepository.findByProductPriceBasicNativeQuery();
+        for(Product product : findProduct){
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    void parameterQueryTest() {
+        List<Product> findAll = productRepository.findAll();
+        System.out.println("====↓↓ Test Data ↓↓====");
+        for (Product product : findAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("====↑↑ Test Data ↑↑====");
+
+        List<Product> findProduct = productRepository.findByProductPriceWithParameter(2000);
+        for(Product product : findProduct){
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    void parameterNamingQuery(){
+        List<Product> findAll = productRepository.findAll();
+        System.out.println("====↓↓ Test Data ↓↓====");
+        for (Product product : findAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("====↑↑ Test Data ↑↑====");
+
+        List<Product> findProduct = productRepository.findByProductPriceWithParameterNaming(2000);
+        for(Product product : findProduct){
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    void parameterNamingQueryTest(){
+        List<Product> findAll = productRepository.findAll();
+        System.out.println("====↓↓ Test Data ↓↓====");
+        for (Product product : findAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("====↑↑ Test Data ↑↑====");
+
+        List<Product> findProduct = productRepository.findByProductPriceWithParameterNaming(2000);
+        for(Product product : findProduct){
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    void parameterNamingQueryTest2(){
+        List<Product> findAll = productRepository.findAll();
+        System.out.println("====↓↓ Test Data ↓↓====");
+        for (Product product : findAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("====↑↑ Test Data ↑↑====");
+
+        List<Product> findProduct = productRepository.findByProductPriceWithParameterNaming2(2000);
+        for(Product product : findProduct){
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    void nativeQueryPagingTest(){
+        List<Product> findAll = productRepository.findAll();
+        System.out.println("====↓↓ Test Data ↓↓====");
+        for (Product product : findAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("====↑↑ Test Data ↑↑====");
+
+        List<Product> findProduct = productRepository.findByProductPriceWithParameterPaging(2000, PageRequest.of(0,2));
+        for(Product product : findProduct){
+            System.out.println(product.toString());
+        }
+    }
 }
