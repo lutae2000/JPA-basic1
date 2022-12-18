@@ -84,6 +84,8 @@ dependencies {
     implementation("io.netty:netty-resolver-dns-native-macos:4.1.75.Final:osx-aarch_64")
     // https://mvnrepository.com/artifact/org.jasypt/jasypt
     implementation group: 'org.jasypt', name: 'jasypt', version: '1.9.3'
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.7.6'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

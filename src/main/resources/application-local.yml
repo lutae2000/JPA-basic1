@@ -17,6 +17,9 @@ spring:
     password: p@ssword123
     #password: ENC(U4dzPkpNF4ugZYHgZGNoK3w8vVDLwqoq)
     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: localhost
+    port: 6379
 logging:
   level:
     root: info

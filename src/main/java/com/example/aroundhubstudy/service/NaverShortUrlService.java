@@ -1,8 +1,10 @@
 package com.example.aroundhubstudy.service;
 
 import com.example.aroundhubstudy.dto.NaverUrlDto;
+import com.example.aroundhubstudy.dto.ShortUrlResponseDto;
 import com.example.aroundhubstudy.entity.ShortUrl;
 
+import com.example.aroundhubstudy.repository.ShortUrlRedisRepository;
 import com.example.aroundhubstudy.repository.ShortUrlRepository;
 import io.netty.handler.codec.http.HttpScheme;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,9 @@ public class NaverShortUrlService {
 
     @Autowired
     ShortUrlRepository shortUrlRepository;
+
+    @Autowired
+    ShortUrlRedisRepository shortUrlRedisRepository;
 
     @Value("${naver.shortUrl}")
     private String NAVER_SHORT_URL_ENDPOINT;
@@ -126,6 +131,12 @@ public class NaverShortUrlService {
         shortUrlEntity.setHash(hash);
         shortUrlRepository.save(shortUrlEntity);
 
+        ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(orgUrl, shortUrl);
+
+        //Cache logic
+        shortUrlRedisRepository.save(shortUrlResponseDto);
+        log.info("[generateShortUrl] Response DTO: {}", shortUrlResponseDto);
+
         return responseEntity;
     }
 
@@ -138,25 +149,34 @@ public class NaverShortUrlService {
 
     public ResponseEntity<?> getShortUrl(String originUrl){
         log.info("[get short url from Naver] request data: {}", originUrl);
-        Optional<ShortUrl> getShortUrl1 = Optional.ofNullable(shortUrlRepository.findByOrgUrl(originUrl));
 
+        //Redis에서 가져오기
+        Optional<ShortUrlResponseDto> getShortUrl1 = shortUrlRedisRepository.findById(originUrl);
         if(getShortUrl1.isPresent()){
-            log.info("data exists!");
-
-            ShortUrl shortUrl = new ShortUrl();
-            shortUrl.setOrgUrl(getShortUrl1.get().getOrgUrl());
-            shortUrl.setUrl(getShortUrl1.get().getUrl());
-            shortUrl.setHash(getShortUrl1.get().getHash());
-            shortUrl.setCreatedAt(getShortUrl1.get().getCreatedAt());
-            shortUrl.setUpdateAt(getShortUrl1.get().getUpdateAt());
-            shortUrl.setId(getShortUrl1.get().getId());
-
-            return ResponseEntity.status(HttpStatus.OK).body(shortUrl);
+            log.info("Redis Cache data exists!");
+            return ResponseEntity.status(HttpStatus.OK).body(getShortUrl1.get());
         } else {
-            log.info("data doesn't exists!");
-            ResponseEntity<NaverUrlDto> response = generateShortUrl(originUrl);
+            //DB에서 가져오기
 
-            return ResponseEntity.status(HttpStatus.OK).body(response.getBody());
+            Optional<ShortUrl> getShortUrl2 = Optional.ofNullable(shortUrlRepository.findByOrgUrl(originUrl));
+
+            if(getShortUrl2.isPresent()){
+                log.info("DB data exists!");
+
+                ShortUrl shortUrl = new ShortUrl();
+                shortUrl.setOrgUrl(getShortUrl2.get().getOrgUrl());
+                shortUrl.setUrl(getShortUrl2.get().getUrl());
+                shortUrl.setHash(getShortUrl2.get().getHash());
+                shortUrl.setCreatedAt(getShortUrl2.get().getCreatedAt());
+                shortUrl.setUpdateAt(getShortUrl2.get().getUpdateAt());
+                shortUrl.setId(getShortUrl2.get().getId());
+                return ResponseEntity.status(HttpStatus.OK).body(shortUrl);
+            } else {
+                log.info("data doesn't exists!");
+                ResponseEntity<NaverUrlDto> response = generateShortUrl(originUrl);
+
+                return ResponseEntity.status(HttpStatus.OK).body(response.getBody());
+            }
         }
     }
 
